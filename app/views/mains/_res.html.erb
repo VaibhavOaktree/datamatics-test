@@ -1,0 +1,24 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Display Name</th>
+      <th>County</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Post Code</th>
+      <th>Country</th>
+      <th>Country Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%= @res["display_name"] %></td>
+      <td><%= @res["address"]["county"] %></td>
+      <td><%= @res["address"]["city"] %></td>
+      <td><%= @res["address"]["state"] %></td>
+      <td><%= @res["address"]["postcode"] %></td>
+      <td><%= @res["address"]["country"] %></td>
+      <td><%= @res["address"]["country_code"] %></td>
+    </tr>
+  </tbody>
+</table>
