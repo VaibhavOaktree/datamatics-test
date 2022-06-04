@@ -1,0 +1,50 @@
+<br><br>
+<center><h3>Information about <%= @place.suburb %>, <%= @place.city %></h3></center>
+<br>
+<div id="map"></div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var lat = <%= raw @place.lat %>;
+    var long = <%= raw @place.long %>;
+    var display_name = "<%= raw @place.display_name.to_s %>";
+  
+    var map = L.map('map').setView([lat, long], 13);
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidW1lc2hibGFkZXIiLCJhIjoiY2t5aXI1N3JpMWR0azJ2cG1meXNrYzZhNCJ9.OEBYPKj3qzhl7wQsyRa11A', {
+        attribution: 'Map data',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoidW1lc2hibGFkZXIiLCJhIjoiY2t5aXI1N3JpMWR0azJ2cG1meXNrYzZhNCJ9.OEBYPKj3qzhl7wQsyRa11A'
+    }).addTo(map);
+
+    var geojsonFeature = {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          lat,
+          long
+        ]
+      }
+    };
+    var marker = new L.Marker([lat, long]);
+    marker.bindPopup(display_name).openPopup();
+    L.geoJSON(geojsonFeature).addTo(map);
+    marker.addTo(map);
+
+    var popup = L.popup();
+
+    function onMapClick(e) {
+      popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(map);
+    }
+
+    map.on('click', onMapClick);
+  });
+</script>

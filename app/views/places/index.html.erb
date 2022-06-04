@@ -10,6 +10,7 @@
       <th>Post Code</th>
       <th>Country</th>
       <th>Boundry Co-ordinates</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -24,6 +25,7 @@
 	      <td><%= place.postcode %></td>
 	      <td><%= place.country %></td>
 	      <td><%= place.boundingbox %></td>
+	      <td><%= link_to "View On Map", place_path(place), class: "btn btn-primary" %></td>
 	    </tr>
 	  <% end %>
   </tbody>

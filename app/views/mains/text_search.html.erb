@@ -1,0 +1,75 @@
+<br>
+<div class="row">
+  <div class="col-md-12">
+    <center><h3>Search by text for Location information</h3></center>
+    <br>
+    <%= form_tag text_search_mains_path, method: :get do %>
+      <div class="form-group row">
+        <div class="col-md-2">
+          <label> Search By Text </label>
+        </div>
+        <div class="col-md-6 ui-widget">
+          <%= text_field_tag :search, nil, id: "places", class: "form-control" %>
+        </div>
+      </div>
+      <%= submit_tag "Get Location Info", class: "btn btn-primary" %>
+    <% end %>
+    <br>
+    <div id="res"></div>
+  </div>
+</div>
+
+<br><br>
+
+<div id="map"></div>
+
+<script>
+  $(function() {
+    var availableTags = <%= raw @places %>;
+    $( "#places" ).autocomplete({
+      source: availableTags
+    });
+  } );
+  $(document).ready(function(){
+    var lat = <%= raw @place.lat %>;
+    var long = <%= raw @place.long %>;
+    var display_name = "<%= raw @place.display_name.to_s %>";
+    var map = L.map('map').setView([lat, long], 13);
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidW1lc2hibGFkZXIiLCJhIjoiY2t5aXI1N3JpMWR0azJ2cG1meXNrYzZhNCJ9.OEBYPKj3qzhl7wQsyRa11A', {
+        attribution: 'Map data',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoidW1lc2hibGFkZXIiLCJhIjoiY2t5aXI1N3JpMWR0azJ2cG1meXNrYzZhNCJ9.OEBYPKj3qzhl7wQsyRa11A'
+    }).addTo(map);
+
+    var geojsonFeature = {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          lat,
+          long
+        ]
+      }
+    };
+    var marker = new L.Marker([lat, long]);
+    marker.bindPopup(display_name).openPopup();
+    L.geoJSON(geojsonFeature).addTo(map);
+    marker.addTo(map);
+
+    var popup = L.popup();
+
+    function onMapClick(e) {
+      popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(map);
+    }
+
+    map.on('click', onMapClick);
+  });
+</script>

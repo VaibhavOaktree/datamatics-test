@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   resources :places
-  resources :mains
+  resources :mains do
+    collection do 
+      get :text_search, to: 'mains#text_search'
+    end 
+  end
 
   namespace :api do
     namespace :v1 do
